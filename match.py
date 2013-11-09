@@ -1,8 +1,17 @@
 import numpy as np
 import pickle
+import urlparse
 
 from sklearn.neighbors import KNeighborsClassifier
-from server import r
+import redis
+
+REDIS_URL = os.environ.get('REDISCLOUD_URL')
+
+if not REDIS_URL:
+	r = redis.Redis()
+else:
+	url = urlparse.urlparse(REDIS_URL)
+	r = redis.Redis(host=url.hostname, port=url.port, password=url.password)
 
 clf = KNeighborsClassifier(1)
 if not r.get("clf"):
