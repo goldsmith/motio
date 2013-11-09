@@ -31,6 +31,9 @@ def train(data, label):
 
 	clf = pickle.loads(r.get("clf"))
 
+	print "len", len(data)
+	print "flat": np.array(data).flatten()[:100]
+
 	flat = np.array(data).flatten()[:1000]
 	clf.fit([flat], [label])
 
@@ -43,6 +46,7 @@ def predict(data):
 
 	print 'predicting from data'
 	print data[0]
+	print len(data)
 
 	clf = pickle.loads(r.get("clf"))
 
