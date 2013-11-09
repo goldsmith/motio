@@ -91,6 +91,8 @@ def add_gesture():
 def do_gesture():
 	data = eval(request.form['data'])
 	# assert isinstance(data, list)
+	name = ''
+	
 	try:
 		name = predict(data)
 	except:
