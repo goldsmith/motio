@@ -9,7 +9,8 @@ from utils import pipe
 app = Flask(__name__)
 sockets = Sockets(app)
 
-client_socket_pipe = pipe()
+web_socket = None
+# web_socket_pipe = ("foo", "bar", "foobar", "barfoo", "bar food", "nighttime")
 
 @app.route("/")
 def index():
@@ -26,7 +27,7 @@ def add_gesture():
 
 	train(data, name)
 
-	client_socket_pipe.send({
+	web_socket_pipe.send({
 		"name": name,
 		"action": "add_gesture"
 	})
@@ -39,15 +40,19 @@ def do_gesture():
 	name = predict(data)
 	# test the model
 	# let the client know of the command name
-	client_socket.send({
+	web_socket.send({
 		"name": name,
 		"action": "do_gesture"
 	})
 
-@sockets.route("/client_socket")
-def client_socket(ws):
-	for data in client_socket_pipe:
-		ws.send(data)
+@sockets.route("/web_socket")
+def web_socket(ws):
+	print "connected", ws
+
+	web_socket = ws
+
+	while True:
+		continue
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
