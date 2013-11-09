@@ -13,3 +13,4 @@ numpy==1.8.0
 scikit-learn==0.14.1
 # -e git+https://github.com/scipy/scipy@4d7e924a319299e39c9a9514e021fbfdfceb854e#egg=scipy-master
 wsgiref==0.1.2
+redis==2.8.0
