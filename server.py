@@ -2,6 +2,11 @@ import os
 import redis
 import gevent
 
+import os
+import urlparse
+import redis
+
+
 from flask import Flask, request
 from flask_sockets import Sockets
 
@@ -17,7 +22,8 @@ REDIS_CHAN = 'motio'
 if not REDIS_URL:
 	redis = redis.Redis()
 else:
-	redis = redis.from_url(REDIS_URL)
+	url = urlparse.urlparse(REDIS_URL)
+	redis = redis.Redis(host=url.hostname, port=url.port, password=url.password)
 
 socket = None
 # socket_pipe = ("foo", "bar", "foobar", "barfoo", "bar food", "nighttime")
@@ -75,13 +81,6 @@ def add_gesture():
 		"name": name,
 		"action": "add_gesture"
 	})
-
-@app.route("/damn")
-def damn():
-	redis.publish(REDIS_CHAN, "foo")
-	print socket
-
-	return "bye!"
 
 @app.route("/do_gesture")
 def do_gesture():
