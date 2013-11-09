@@ -4,8 +4,6 @@ import gevent
 
 import os
 import urlparse
-import redis
-
 
 from flask import Flask, request
 from flask_sockets import Sockets
@@ -14,31 +12,32 @@ from match import train, predict
 from utils import pipe
 
 app = Flask(__name__)
+app.debug = True
 sockets = Sockets(app)
 
 REDIS_URL = os.environ.get('REDISCLOUD_URL')
 REDIS_CHAN = 'motio'
 
 if not REDIS_URL:
-	redis = redis.Redis()
+	r = redis.Redis()
 else:
 	url = urlparse.urlparse(REDIS_URL)
-	redis = redis.Redis(host=url.hostname, port=url.port, password=url.password)
+	r = redis.Redis(host=url.hostname, port=url.port, password=url.password)
 
-socket = None
-# socket_pipe = ("foo", "bar", "foobar", "barfoo", "bar food", "nighttime")
+print r
 
 class SocketBackend(object):
 
 	def __init__(self):
 		self.clients = []
-		self.pubsub = redis.pubsub()
+		self.pubsub = r.pubsub()
 		self.pubsub.subscribe(REDIS_CHAN)
 
 	def __iter_data(self):
 		for message in self.pubsub.listen():
 			data = message.get('data')
 			print 'data received: {}'.format(data)
+			print (str(message))
 			if message['type'] == 'message':
 				yield data
 
@@ -46,13 +45,13 @@ class SocketBackend(object):
 		self.clients.append(client)
 
 	def send(self, client, data):
-		try:
-			client.send(data)
-		except:
-			self.clients.remove(client)
+		# try:
+		os.system('say foobar')
+		client.send(data)
 
 	def run(self):
 		for data in self.__iter_data():
+			print 'data!', data
 			for client in self.clients:
 				gevent.spawn(self.send, client, data)
 
@@ -75,12 +74,14 @@ def add_gesture():
 	name = request.form['name']
 	data = request.form['data']
 
+	print 'got your data!', name, data
+
 	train(data, name)
 
-	redis.publish(REDIS_CHAN, {
-		"name": name,
-		"action": "add_gesture"
-	})
+	key = '{"name": "%s", "action": "add_gesture"}' % name
+	r.publish(REDIS_CHAN, key)
+
+	return "thanks a lot!\n"
 
 @app.route("/do_gesture", methods=['POST'])
 def do_gesture():
@@ -88,13 +89,13 @@ def do_gesture():
 	name = predict(data)
 	# test the model
 	# let the client know of the command name
-	redis.publish(REDIS_CHAN, {
-		"name": name,
-		"action": "do_gesture"
-	})
+	r.publish(REDIS_CHAN, '{"name": {},"action": "do_gesture"}'.format(name))
+
+	return ''
 
 @sockets.route("/client_socket")
 def web_socket(ws):
+
 	socket.register(ws)
 
 	while ws.socket is not None:
