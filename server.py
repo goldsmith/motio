@@ -99,7 +99,7 @@ def do_gesture():
 		name = ''
 	# test the model
 	# let the client know of the command name
-	r.publish(REDIS_CHAN, '{"name": %s,"action": "do_gesture"}' % name)
+	r.publish(REDIS_CHAN, '{"name": "%s","action": "do_gesture"}' % name)
 
 	return ''
 
