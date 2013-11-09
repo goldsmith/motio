@@ -76,6 +76,7 @@ def add_gesture():
 	# let the client know that there is a new model
 	name = request.form['name']
 	data = eval(request.form['data'])
+	assert isinstance(data, list)
 
 	print 'got your data!', name, data
 
@@ -88,7 +89,8 @@ def add_gesture():
 
 @app.route("/do_gesture", methods=['POST'])
 def do_gesture():
-	data = request.form['data']
+	data = eval(request.form['data'])
+	assert isinstance(data, list)
 	name = predict(data)
 	# test the model
 	# let the client know of the command name
