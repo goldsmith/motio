@@ -19,13 +19,28 @@ def add_gesture():
 	# get the data from the post
 	# train the model
 	# let the client know that there is a new model
-	pass
+	name = request.form['name']
+	data = request.form['data']
+
+	train(data, name)
+
+	client_socket_pipe.send({
+		"name": name,
+		"action": "add_gesture"
+	})
+
+	return
 
 @app.route("/do_gesture")
 def do_gesture():
+	data = request.form['data']
+	name = predict(data)
 	# test the model
 	# let the client know of the command name
-	pass
+	client_socket.send({
+		"name": name,
+		"action": "do_gesture"
+	})
 
 @sockets.route("/client_socket")
 def client_socket(ws):
