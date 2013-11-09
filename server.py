@@ -45,7 +45,7 @@ def do_gesture():
 		"action": "do_gesture"
 	})
 
-@sockets.route("/web_socket")
+@sockets.route("/client_socket")
 def web_socket(ws):
 	print "connected", ws
 
