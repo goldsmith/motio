@@ -92,14 +92,14 @@ def do_gesture():
 	data = eval(request.form['data'])
 	# assert isinstance(data, list)
 	name = ''
-	
+
 	try:
 		name = predict(data)
 	except:
 		name = ''
 	# test the model
 	# let the client know of the command name
-	r.publish(REDIS_CHAN, '{"name": {},"action": "do_gesture"}'.format(name))
+	r.publish(REDIS_CHAN, '{"name": %s,"action": "do_gesture"}' % name)
 
 	return ''
 
