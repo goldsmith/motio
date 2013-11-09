@@ -67,7 +67,7 @@ def index():
 	print request
 	return 'hi!'
 
-@app.route("/add_gesture")
+@app.route("/add_gesture", methods=['POST'])
 def add_gesture():
 	# get the data from the post
 	# train the model
@@ -82,7 +82,7 @@ def add_gesture():
 		"action": "add_gesture"
 	})
 
-@app.route("/do_gesture")
+@app.route("/do_gesture", methods=['POST'])
 def do_gesture():
 	data = request.form['data']
 	name = predict(data)
