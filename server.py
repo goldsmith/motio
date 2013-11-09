@@ -90,8 +90,11 @@ def add_gesture():
 @app.route("/do_gesture", methods=['POST'])
 def do_gesture():
 	data = eval(request.form['data'])
-	assert isinstance(data, list)
-	name = predict(data)
+	# assert isinstance(data, list)
+	try:
+		name = predict(data)
+	except:
+		name = ''
 	# test the model
 	# let the client know of the command name
 	r.publish(REDIS_CHAN, '{"name": {},"action": "do_gesture"}'.format(name))

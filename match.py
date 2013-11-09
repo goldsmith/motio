@@ -31,7 +31,7 @@ def train(data, label):
 
 	clf = pickle.loads(r.get("clf"))
 
-	flat = np.array(data).flatten()
+	flat = np.array(data).flatten()[:1000]
 	clf.fit([flat], [label])
 
 	r.set("clf", pickle.dumps(clf))
@@ -47,5 +47,5 @@ def predict(data):
 	clf = pickle.loads(r.get("clf"))
 
 	flat = np.array(data).flatten()
-	return clf.predict(flat)
+	return clf.predict([flat])
 
