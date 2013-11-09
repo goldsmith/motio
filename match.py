@@ -1,6 +1,7 @@
 import numpy as np
 import pickle
 import urlparse
+import os
 
 from sklearn.neighbors import KNeighborsClassifier
 import redis
