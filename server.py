@@ -75,7 +75,7 @@ def add_gesture():
 	# train the model
 	# let the client know that there is a new model
 	name = request.form['name']
-	data = request.form['data']
+	data = eval(request.form['data'])
 
 	print 'got your data!', name, data
 

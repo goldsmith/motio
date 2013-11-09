@@ -26,7 +26,7 @@ def train(data, label):
 
 	print 'training with data'
 	print 'label', label
-	print data
+	print data[0]
 
 
 	clf = pickle.loads(r.get("clf"))
@@ -42,7 +42,7 @@ def predict(data):
 	"""
 
 	print 'predicting from data'
-	print data
+	print data[0]
 
 	clf = pickle.loads(r.get("clf"))
 
