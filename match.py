@@ -24,6 +24,11 @@ def train(data, label):
 	label should be a string
 	"""
 
+	print 'training with data'
+	print 'label', label
+	print data
+
+
 	clf = pickle.loads(r.get("clf"))
 
 	flat = np.array(data).flatten()
@@ -35,6 +40,9 @@ def predict(data):
 	"""
 	Same form
 	"""
+
+	print 'predicting from data'
+	print data
 
 	clf = pickle.loads(r.get("clf"))
 
