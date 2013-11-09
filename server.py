@@ -71,12 +71,10 @@ def add_gesture():
 
 	train(data, name)
 
-	socket_pipe.send({
+	redis.publish(REDIS_CHAN, {
 		"name": name,
 		"action": "add_gesture"
 	})
-
-	return
 
 @app.route("/damn")
 def damn():
