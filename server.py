@@ -15,9 +15,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.debug = True
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
-db = SQLAlchemy(app)
 sockets = Sockets(app)
 
 REDIS_URL = os.environ.get('REDISCLOUD_URL')
