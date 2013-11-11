@@ -8,19 +8,22 @@ import redis
 
 REDIS_URL = os.environ.get('REDISCLOUD_URL')
 
-if not REDIS_URL:
+if not REDIS_URL: 
 	r = redis.Redis()
 else:
 	url = urlparse.urlparse(REDIS_URL)
 	r = redis.Redis(host=url.hostname, port=url.port, password=url.password)
 
-clf = KNeighborsClassifier(1)
+classifier = KNeighborsClassifier(1)
 if not r.get("clf"):
-	r.set("clf", pickle.dumps(clf))
+	print "database not found, making new one"
+	r.set("clf", pickle.dumps(classifier))
+else:
+	print "database loaded from pickle"
 
 def train(data, label):
 	"""
-	Data should be [<>, <>, <>, ...]
+	Data should be [<>, <>, <>, ...]  
 	label should be a string
 	"""
 
@@ -32,10 +35,12 @@ def train(data, label):
 	clf = pickle.loads(r.get("clf"))
 
 	print "len", len(data)
-	print "flat", np.array(data).flatten()[:100]
+	print "flat", np.array(data).flatten()[:100] 
 
-	flat = np.array(data).flatten()[:1000]
-	clf.fit([flat], [label])
+	flat = np.array(data[:200]).flatten()[:1000]
+	print "flat 0", flat[0]
+	print "flate len", len(flat)
+	clf.fit([flat[:900]], [label])
 
 	r.set("clf", pickle.dumps(clf))
 
@@ -50,6 +55,7 @@ def predict(data):
 
 	clf = pickle.loads(r.get("clf"))
 
-	flat = np.array(data).flatten()
-	return clf.predict([flat])
+	flat = np.array(data[:200]).flatten()
+	print "flat len", len(flat)
+	return clf.predict([flat[:900]])
 

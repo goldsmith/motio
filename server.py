@@ -27,7 +27,7 @@ else:
 	url = urlparse.urlparse(REDIS_URL)
 	r = redis.Redis(host=url.hostname, port=url.port, password=url.password)
 
-print r
+print r 
 
 class SocketBackend(object):
 
@@ -74,7 +74,7 @@ def add_gesture():
 	# get the data from the post
 	# train the model
 	# let the client know that there is a new model
-	name = request.form['name']
+	name = request.form['name'] 
 	data = eval(request.form['data'])
 	assert isinstance(data, list)
 
@@ -95,7 +95,8 @@ def do_gesture():
 
 	try:
 		name = predict(data)
-	except:
+	except Exception as e:
+		print e
 		name = ''
 	# test the model
 	# let the client know of the command name
